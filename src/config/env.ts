@@ -22,6 +22,8 @@ export const env = {
   PAYPHONE_STORE_ID: process.env.PAYPHONE_STORE_ID ?? "",
   /** URL pública de la tienda (para el retorno de Payphone y los links de seguimiento). */
   SHOP_URL: process.env.SHOP_URL ?? process.env.PUBLIC_APP_URL ?? "http://localhost:5190",
+  /** Google Maps: mapa del checkout (la tienda recibe la clave desde /public/storefront). */
+  GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY ?? "",
   /** Cloudinary: fotos del menú (el navegador sube directo; la API solo firma). */
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME ?? "",
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY ?? "",

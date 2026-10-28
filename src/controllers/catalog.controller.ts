@@ -43,7 +43,9 @@ export const updateBranch = h(async (req, res) => {
   if (b.order !== undefined) branch.order = num(b.order);
   if (b.franchise !== undefined) branch.franchise = Boolean(b.franchise);
   for (const k of ["pickupEnabled", "deliveryEnabled"] as const) if (b[k] !== undefined) branch[k] = Boolean(b[k]);
-  for (const k of ["deliveryFee", "minOrder", "prepMinutes"] as const) if (b[k] !== undefined) branch[k] = num(b[k]);
+  for (const k of ["deliveryFee", "minOrder", "prepMinutes", "deliveryRadiusKm"] as const) if (b[k] !== undefined) branch[k] = num(b[k]);
+  if (b.lat !== undefined) branch.lat = b.lat === null || b.lat === "" ? null : num(b.lat);
+  if (b.lng !== undefined) branch.lng = b.lng === null || b.lng === "" ? null : num(b.lng);
   for (const k of ["whatsapp", "mapsUrl"] as const) if (b[k] !== undefined) branch[k] = str(b[k]);
   if (Array.isArray(b.privateTables)) branch.privateTables = b.privateTables.filter((t: { name?: string }) => t && t.name).map((t: { name: string; capacity?: number }) => ({ name: str(t.name), capacity: num(t.capacity, 10) }));
   if (b.active !== undefined) branch.active = Boolean(b.active);

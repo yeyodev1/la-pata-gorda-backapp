@@ -207,7 +207,8 @@ async function main() {
 
   // Locales
   const PRIVATE: Record<string, { name: string; capacity: number }[]> = { SAM: [{ name: "Privado terraza", capacity: 14 }], "GYE-URD": [{ name: "Salón privado", capacity: 12 }] };
-  const branchDocs = await Branch.insertMany(BRANCHES.map(({ size: _s, ...b }) => ({ ...b, franchise: "franchise" in b ? Boolean(b.franchise) : false, hours: b.city === "Miami" ? "11:30-22:00" : "12:00-22:00", whatsapp: b.type === "local" ? "+593990000000" : "", deliveryEnabled: b.type === "local" && b.code !== "MIA", pickupEnabled: b.type === "local", deliveryFee: b.city === "Samborondón" ? 3.5 : 2.5, prepMinutes: 25, privateTables: PRIVATE[b.code] ?? [] })));
+  const COORDS: Record<string, [number, number]> = { "GYE-ALV": [-2.1588, -79.9009], "GYE-URD": [-2.1694, -79.9063], SAM: [-2.1178, -79.8715], UIO: [-0.2027, -78.4287], MEC: [-0.9494, -80.7290], AMB: [-1.2641, -78.6200], MIA: [25.7503, -80.2591] };
+  const branchDocs = await Branch.insertMany(BRANCHES.map(({ size: _s, ...b }) => ({ ...b, franchise: "franchise" in b ? Boolean(b.franchise) : false, hours: b.city === "Miami" ? "11:30-22:00" : "12:00-22:00", whatsapp: b.type === "local" ? "+593990000000" : "", deliveryEnabled: b.type === "local" && b.code !== "MIA", pickupEnabled: b.type === "local", deliveryFee: b.city === "Samborondón" ? 3.5 : 2.5, prepMinutes: 25, privateTables: PRIVATE[b.code] ?? [], lat: COORDS[b.code]?.[0] ?? null, lng: COORDS[b.code]?.[1] ?? null, deliveryRadiusKm: b.city === "Quito" ? 15 : 12 })));
   const B = (code: string) => branchDocs.find((b) => b.code === code)!;
   const locals = branchDocs.filter((b) => b.type === "local");
   const sizeOf = new Map(BRANCHES.map((b) => [b.code, b.size]));

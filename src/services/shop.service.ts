@@ -34,6 +34,14 @@ export async function createCustomerOrder(input: CheckoutInput): Promise<{ order
   if (input.type === "retiro" && !branch.pickupEnabled) throw badRequest(`${branch.name} no tiene retiro en local activo`);
   if (input.type === "domicilio" && !branch.deliveryEnabled) throw badRequest(`${branch.name} no hace envíos a domicilio`);
   if (input.type === "domicilio" && !input.address?.text?.trim()) throw badRequest("Indica la dirección de entrega");
+  let distanceKm: number | null = null;
+  if (input.type === "domicilio" && branch.lat != null && branch.lng != null && typeof input.address?.lat === "number" && typeof input.address?.lng === "number") {
+    const R = 6371, toRad = (d: number) => (d * Math.PI) / 180;
+    const dLat = toRad(input.address.lat - branch.lat), dLng = toRad(input.address.lng - branch.lng);
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(branch.lat)) * Math.cos(toRad(input.address.lat)) * Math.sin(dLng / 2) ** 2;
+    distanceKm = round2(2 * R * Math.asin(Math.sqrt(a)));
+    if (branch.deliveryRadiusKm > 0 && distanceKm > branch.deliveryRadiusKm) throw badRequest(`Esa dirección está a ${distanceKm} km de ${branch.name}; el envío llega hasta ${branch.deliveryRadiusKm} km. Prueba con otro local.`, { distanceKm });
+  }
   const name = String(input.customer?.name ?? "").trim();
   const phone = String(input.customer?.phone ?? "").replace(/[^\d+]/g, "");
   if (!name || phone.length < 9) throw badRequest("Nombre y teléfono válidos son obligatorios");
@@ -72,7 +80,7 @@ export async function createCustomerOrder(input: CheckoutInput): Promise<{ order
   const order = await CustomerOrder.create({
     number: await nextNumber("TIENDA"), trackingCode: code(), branch: branch._id, branchName: branch.name, type: input.type, channel: input.channel ?? "web",
     customer: { name, phone, email: String(input.customer.email ?? "").trim() }, address: { text: String(input.address?.text ?? "").trim(), reference: String(input.address?.reference ?? "").trim(), lat: input.address?.lat ?? null, lng: input.address?.lng ?? null },
-    items, subtotal, deliveryFee, total, payment: { method, status: "pendiente", reference: "", payphoneId: "", paidAt: null }, status: "nuevo", notes: String(input.notes ?? "").slice(0, 500), scheduledFor: String(input.scheduledFor ?? ""), estimatedMinutes: branch.prepMinutes + (input.type === "domicilio" ? 25 : 0),
+    items, subtotal, deliveryFee, total, payment: { method, status: "pendiente", reference: "", payphoneId: "", paidAt: null }, status: "nuevo", notes: String(input.notes ?? "").slice(0, 500), scheduledFor: String(input.scheduledFor ?? ""), estimatedMinutes: branch.prepMinutes + (input.type === "domicilio" ? 20 + Math.round((distanceKm ?? 4) * 3) : 0),
     timeline: [{ status: "nuevo", at: new Date(), by: "cliente", note: "" }],
   });
   let paymentUrl: string | null = null;

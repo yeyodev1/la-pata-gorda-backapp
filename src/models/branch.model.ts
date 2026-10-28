@@ -28,6 +28,11 @@ export interface IBranch {
   prepMinutes: number;
   whatsapp: string;
   mapsUrl: string;
+  /** Ubicación del local (centro del mapa en el checkout y distancia de entrega). */
+  lat: number | null;
+  lng: number | null;
+  /** Radio de entrega a domicilio en km (0 = sin límite). */
+  deliveryRadiusKm: number;
   /** Mesas privadas / salones que se reservan con confirmación del administrador. */
   privateTables: { name: string; capacity: number }[];
   active: boolean;
@@ -54,6 +59,9 @@ const branchSchema = new Schema<IBranch>(
     prepMinutes: { type: Number, default: 25 },
     whatsapp: { type: String, default: "" },
     mapsUrl: { type: String, default: "" },
+    lat: { type: Number, default: null },
+    lng: { type: Number, default: null },
+    deliveryRadiusKm: { type: Number, default: 12 },
     privateTables: { type: [{ name: { type: String, required: true }, capacity: { type: Number, default: 10 } }], default: [] },
     active: { type: Boolean, default: true },
   },

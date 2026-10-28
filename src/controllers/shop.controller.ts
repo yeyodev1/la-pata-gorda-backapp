@@ -11,10 +11,11 @@ import { num } from "../utils/numbers";
 import { pageQuery, paged } from "../utils/pagination";
 import { ecuadorDateString } from "../utils/dates";
 import { payphoneConfigured } from "../services/payphone.service";
+import { env } from "../config/env";
 import { createCustomerOrder, confirmPayphone, setOrderStatus } from "../services/shop.service";
 import { assertBranchAccess } from "./catalog.controller";
 
-const publicBranch = (b: InstanceType<typeof Branch>) => ({ id: b._id, code: b.code, name: b.name, city: b.city, address: b.address, phone: b.phone, hours: b.hours, pickupEnabled: b.pickupEnabled, deliveryEnabled: b.deliveryEnabled, deliveryFee: b.deliveryFee, minOrder: b.minOrder, prepMinutes: b.prepMinutes, whatsapp: b.whatsapp, mapsUrl: b.mapsUrl, capacity: b.capacity, privateTables: b.privateTables });
+const publicBranch = (b: InstanceType<typeof Branch>) => ({ id: b._id, code: b.code, name: b.name, city: b.city, address: b.address, phone: b.phone, hours: b.hours, pickupEnabled: b.pickupEnabled, deliveryEnabled: b.deliveryEnabled, deliveryFee: b.deliveryFee, minOrder: b.minOrder, prepMinutes: b.prepMinutes, whatsapp: b.whatsapp, mapsUrl: b.mapsUrl, lat: b.lat, lng: b.lng, deliveryRadiusKm: b.deliveryRadiusKm, capacity: b.capacity, privateTables: b.privateTables });
 
 // ---------- Público (tienda) ----------
 export const storefront = h(async (_req, res) => {
@@ -30,6 +31,7 @@ export const storefront = h(async (_req, res) => {
     products: products.map((p) => ({ id: p._id, code: p.code, name: p.name, category: p.category, description: p.description, price: p.price, image: p.image, featured: p.featured, options: p.options, excludedBranches: p.excludedBranches })),
     payments: { payphone: payphoneConfigured(), local: true, efectivo: true, transferencia: false },
     whatsapp: settings.whatsappNumber,
+    mapsKey: env.GOOGLE_MAPS_API_KEY,
   });
 });
 
