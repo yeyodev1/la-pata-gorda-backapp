@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import http from "http";
+import mongoose from "mongoose";
 import routerApi from "./routes";
 import { env } from "./config/env";
 import { dbConnect, isConnected } from "./config/mongo";
@@ -34,6 +35,17 @@ export function createApp(options: CreateAppOptions = {}) {
   if (options.lazyDb) app.use((_req, _res, next) => { dbConnect().then(() => next(), next); });
   app.post("/internal/cron/daily", requireInternalKey, cronDaily);
   // Keep-warm (cron cada 4 min): conecta a Mongo y responde; mantiene viva la conexión del Durable Object.
+  // Diagnóstico de latencia a Mongo desde el Worker (tiempos en ms).
+  app.get("/internal/diag", requireInternalKey, async (req, res, next) => {
+    try {
+      const out: Record<string, number> = {}; let t = Date.now();
+      await dbConnect(); out.connect = Date.now() - t;
+      for (let i = 1; i <= 3; i++) { t = Date.now(); await mongoose.connection.db!.command({ ping: 1 }); out[`ping${i}`] = Date.now() - t; }
+      t = Date.now(); await mongoose.connection.db!.collection("branches").countDocuments(); out.count = Date.now() - t;
+      t = Date.now(); await Promise.all([1, 2, 3].map(() => mongoose.connection.db!.collection("branches").countDocuments())); out.parallel3 = Date.now() - t;
+      res.json({ ...out, colo: (req.headers["cf-ray"] ?? "").toString().split("-")[1] ?? "", hosts: mongoose.connection.host });
+    } catch (err) { next(err); }
+  });
   app.get("/internal/warm", requireInternalKey, (_req, res, next) => { dbConnect().then(() => res.json({ ok: true, db: isConnected() }), next); });
   routerApi(app);
   app.use(globalErrorHandler);

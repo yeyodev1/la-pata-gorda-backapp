@@ -33,17 +33,20 @@ export const dashboard = h(async (req, res) => {
   const mine = req.auth!.role === "local" && req.auth!.branch ? new Types.ObjectId(req.auth!.branch) : null;
   const branches = await Branch.find({ type: "local", active: true, ...(mine ? { _id: mine } : {}) }).sort({ order: 1 });
   const bIds = branches.map((b) => b._id);
-  const shopToday = await CustomerOrder.find({ branch: { $in: bIds }, createdAt: { $gte: new Date(`${today}T00:00:00-05:00`) } });
+  const timings: Record<string, number> = {}; const t0 = Date.now();
+  const timed = async <T>(k: string, p: Promise<T>): Promise<T> => { const s = Date.now(); const r = await p; timings[k] = Date.now() - s; return r; };
+  const shopToday = await timed("shopToday", CustomerOrder.find({ branch: { $in: bIds }, createdAt: { $gte: new Date(`${today}T00:00:00-05:00`) } }).lean());
   const [sales, orders, reservations, alerts, conversations, reviews, plan, purchases] = await Promise.all([
-    DailySales.find({ branch: { $in: bIds }, date: { $gte: weekAgo, $lte: today } }),
-    InternalOrder.find({ branch: { $in: bIds }, deliveryDate: { $in: [today, tomorrow] }, status: { $ne: "anulado" } }),
-    Reservation.find({ branch: { $in: bIds }, date: today, status: { $in: ["pendiente", "confirmada", "sentada"] } }),
-    Alert.find({ status: "abierta", ...(mine ? { branch: mine } : {}) }).sort({ severity: -1, createdAt: -1 }).limit(10),
-    mine ? Promise.resolve(0) : Conversation.countDocuments({ status: "abierta", unread: { $gt: 0 } }),
-    mine ? Promise.resolve(0) : Review.countDocuments({ status: "nueva" }),
-    ProductionPlan.findOne({ date: tomorrow }),
-    mine ? Promise.resolve(0) : Purchase.countDocuments({ status: { $in: ["requerimiento", "pedida"] } }),
+    timed("sales", DailySales.find({ branch: { $in: bIds }, date: { $gte: weekAgo, $lte: today } }, { branch: 1, date: 1, totalAmount: 1 }).lean()),
+    timed("orders", InternalOrder.find({ branch: { $in: bIds }, deliveryDate: { $in: [today, tomorrow] }, status: { $ne: "anulado" } }, { branch: 1, deliveryDate: 1, status: 1, inflatedCount: 1 }).lean()),
+    timed("reservations", Reservation.find({ branch: { $in: bIds }, date: today, status: { $in: ["pendiente", "confirmada", "sentada"] } }, { branch: 1, people: 1 }).lean()),
+    timed("alerts", Alert.find({ status: "abierta", ...(mine ? { branch: mine } : {}) }).sort({ severity: -1, createdAt: -1 }).limit(10).lean()),
+    mine ? Promise.resolve(0) : timed("conv", Conversation.countDocuments({ status: "abierta", unread: { $gt: 0 } })),
+    mine ? Promise.resolve(0) : timed("reviews", Review.countDocuments({ status: "nueva" })),
+    timed("plan", ProductionPlan.findOne({ date: tomorrow }, { number: 1, status: 1, items: 1, rawNeeds: 1 }).lean()),
+    mine ? Promise.resolve(0) : timed("purchases", Purchase.countDocuments({ status: { $in: ["requerimiento", "pedida"] } })),
   ]);
+  timings.total = Date.now() - t0;
   const perBranch = branches.map((b) => {
     const s = sales.filter((x) => String(x.branch) === String(b._id));
     const todayS = s.find((x) => x.date === today);
@@ -52,7 +55,7 @@ export const dashboard = h(async (req, res) => {
   });
   const byDay = Array.from({ length: 7 }, (_, i) => { const d = addDaysStr(weekAgo, i); return { date: d, amount: round2(sales.filter((s) => s.date === d).reduce((a, s) => a + s.totalAmount, 0)) }; });
   const shop = { orders: shopToday.length, amount: round2(shopToday.filter((o) => o.status !== "cancelado").reduce((a, o) => a + o.total, 0)), pending: shopToday.filter((o) => o.status === "nuevo").length, byBranch: Object.fromEntries(branches.map((b) => [String(b._id), shopToday.filter((o) => String(o.branch) === String(b._id) && o.status !== "cancelado").length])) };
-  res.json({ today, tomorrow, shop, totals: { today: round2(perBranch.reduce((a, b) => a + (b.today ?? 0), 0)), week: round2(perBranch.reduce((a, b) => a + b.week, 0)), reservationsToday: reservations.reduce((a, r) => a + r.people, 0), openAlerts: alerts.length, unreadConversations: conversations, pendingReviews: reviews, pendingOrders: orders.filter((o) => o.status === "enviado").length, openPurchases: purchases }, branches: perBranch, byDay, alerts, plan: plan ? { id: plan._id, number: plan.number, status: plan.status, items: plan.items.length, shortages: plan.rawNeeds.filter((r) => r.shortage > 0).length } : null });
+  res.json({ today, tomorrow, timings, shop, totals: { today: round2(perBranch.reduce((a, b) => a + (b.today ?? 0), 0)), week: round2(perBranch.reduce((a, b) => a + b.week, 0)), reservationsToday: reservations.reduce((a, r) => a + r.people, 0), openAlerts: alerts.length, unreadConversations: conversations, pendingReviews: reviews, pendingOrders: orders.filter((o) => o.status === "enviado").length, openPurchases: purchases }, branches: perBranch, byDay, alerts, plan: plan ? { id: plan._id, number: plan.number, status: plan.status, items: plan.items.length, shortages: plan.rawNeeds.filter((r) => r.shortage > 0).length } : null });
 });
 
 // ---------- Alertas ----------
