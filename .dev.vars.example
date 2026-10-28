@@ -1,0 +1,5 @@
+# Variables locales para `npm run cf:dev` (runtime real de Cloudflare en tu Mac). No subir a git.
+MONGODB_URI=
+JWT_SECRET=pon-aqui-un-secreto-largo
+CORS_ORIGINS=http://localhost:5190
+PUBLIC_APP_URL=http://localhost:5190
