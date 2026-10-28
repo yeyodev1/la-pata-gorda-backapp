@@ -1,0 +1,582 @@
+[
+ {
+  "code": "CARAPACHO-RELLENO",
+  "name": "Carapacho Relleno",
+  "category": "Entradas",
+  "categoryOrder": 1,
+  "price": 9.0,
+  "description": "Nueva Receta.  Carne de Cangrejo con maduro, pasas y salsa criolla.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/d6ad733e0c7ca80354eda62dadfeb871/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "GUACAMARONES",
+  "name": "Guacamarones",
+  "category": "Entradas",
+  "categoryOrder": 1,
+  "price": 10.0,
+  "description": "Canastas de verde rellenas de\nguacamole con camarón y\nsalsa criolla (6 uni)",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/6cbcad533aa4033a15e75af800109252/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CROQUETAS-DE-CARAPACHO",
+  "name": "Croquetas de Carapacho",
+  "category": "Entradas",
+  "categoryOrder": 1,
+  "price": 9.0,
+  "description": "Con maduro caramelizado y nuestra salsa de la casa (5uni)",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/c88a832a3ea52a31c0b9f2a51f313668/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CREMA-DE-CANGREJO",
+  "name": "Crema de Cangrejo",
+  "category": "Entradas",
+  "categoryOrder": 1,
+  "price": 9.0,
+  "description": "Hemos evolucionado nuestra crema de Cangrejo con una nueva receta que nos encanta y estamos seguros que a ti también te va a gustar.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/b0994e5334b62293e288e3c7bd166679/c67fc65e9b4e16a553eb7574fba090f1.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CONCHAS-ASADAS",
+  "name": "Conchas Asadas",
+  "category": "Conchas",
+  "categoryOrder": 2,
+  "price": 17.0,
+  "description": "Jugositas, con mantequilla clarificada, acompañadas de patacones (12 uni)",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/0860d641d16276f979ae195c844816e5/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CONCHAS-AL-AJILLO",
+  "name": "Conchas al Ajillo",
+  "category": "Conchas",
+  "categoryOrder": 2,
+  "price": 18.0,
+  "description": "Jugositas, con mantequilla de ajo, acompañadas de patacones (12 uni).",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/655f62f748bb0a23c5ad45ca63cda495/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CHICHARRON-DE-MARISCOS",
+  "name": "Chicharrón de Mariscos",
+  "category": "Para Compartir",
+  "categoryOrder": 3,
+  "price": 15.0,
+  "description": "Camarón, pescado y calamar con nuestro empanizado crocante de la casa, acompañado de chifles y nuestro alioli de albahaca.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/ff2b606555c35b9da51c60c206c240ad/c67fc65e9b4e16a553eb7574fba090f1.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PIQUEO-MAR-Y-TIERRA",
+  "name": "Piqueo Mar y Tierra",
+  "category": "Para Compartir",
+  "categoryOrder": 3,
+  "price": 19.0,
+  "description": "Para los amantes de los 2 mundos.\nDesde el grill con chimichurri de la casa: lomo, pollo, chorizo, camarón y calamar, maduro frito con queso y mayonesa de chimichurri.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/a6d7cafd69c1acfe0bb549a4428bdf97/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CEVICHE-DE-CANGREJO",
+  "name": "Ceviche de Cangrejo",
+  "category": "Ceviches",
+  "categoryOrder": 4,
+  "price": 18.0,
+  "description": "Delicioso ceviche de cangrejo, la especialidad de la casa.\nIncluye 1 porción de chifles.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/d2209ac15647e1f7c0dc86b3033a6531/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CEVICHE-DE-CAMARON",
+  "name": "Ceviche de Camarón",
+  "category": "Ceviches",
+  "categoryOrder": 4,
+  "price": 10.0,
+  "description": "En nuestra nueva salsa atomatada roja.\n¡Simplemente Espectacular!\n Incluye 1 porción de chifles.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/619a0b128030eae7883809e0bf7f66a7/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CEVICHE-DE-CONCHA",
+  "name": "Ceviche de Concha",
+  "category": "Ceviches",
+  "categoryOrder": 4,
+  "price": 17.0,
+  "description": "Concha cruda o cocinada, salsa criolla,\nlimón y salsa de aguacate.\nIncluye 1 porción de chifles.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/cb146fd792ace1c13c1ef2828bd42a83/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CEVICHE-EL-FAVORITO-DE-JOSUE",
+  "name": "Ceviche \"El Favorito de Josué\"",
+  "category": "Ceviches",
+  "categoryOrder": 4,
+  "price": 14.5,
+  "description": "Camarón, chicharrón de calamar y Carne de cangrejo con un toque de salsa de maní.\n Incluye 1 porción de chifles.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/78efdc19bfade7b97d151c3d67dd0cea/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CEVICHE-JIPIJAPA-DE-PESCADO-",
+  "name": "Ceviche Jipijapa de Pescado y Camarón",
+  "category": "Ceviches",
+  "categoryOrder": 4,
+  "price": 11.0,
+  "description": "De pesca blanca y camarón en salsa de maní y salsa de aguacate.\nIncluye 1 porción de chifles.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/c4db52ec62e2c371b6edc98a7bcda4b2/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CEVICHE-JIPIJAPA-DE-PESCADO",
+  "name": "Ceviche Jipijapa de Pescado",
+  "category": "Ceviches",
+  "categoryOrder": 4,
+  "price": 11.35,
+  "description": "De pesca blanca en salsa de maní y salsa de aguacate.\nIncluye 1 porción de chifles.",
+  "image": null,
+  "featured": false
+ },
+ {
+  "code": "VICHE-DE-MARISCOS",
+  "name": "Viche de Mariscos",
+  "category": "Sopas",
+  "categoryOrder": 5,
+  "price": 15.0,
+  "description": "El Viche Tradicional con el toque de maní Pata Gorda de pulpo, calamar y camarón",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/9d2937933d290c615c182c555b445dde/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "COMBO-CANGREJOS-CRIOLLOS",
+  "name": "Combo Cangrejos Criollos",
+  "category": "Cangrejos",
+  "categoryOrder": 6,
+  "price": 18.5,
+  "description": "Nuestra receta de la olla perfeccionada por años. Hace que nuestros Cangrejos, seleccionados uno a uno, sean únicos. 3 unidades, salsa criolla y maduros cocinados.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/421b5a8ab9a5c5e0c7a164b9f9d67318/c67fc65e9b4e16a553eb7574fba090f1.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CANGREJOS-AL-AJILLO",
+  "name": "Cangrejos al Ajillo",
+  "category": "Cangrejos",
+  "categoryOrder": 6,
+  "price": 19.5,
+  "description": "3 unidades de Cangrejos al ajillo, deliciosos, salsa criolla y maduro cocinado",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/189b7e930e5fad59937fff6622aa5ddb/c67fc65e9b4e16a553eb7574fba090f1.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CANGREJO-SALSA-PATA-GORDA",
+  "name": "Cangrejo Salsa Pata Gorda",
+  "category": "Cangrejos",
+  "categoryOrder": 6,
+  "price": 18.0,
+  "description": "Nuestra receta de la olla perfeccionada por años, con un sabor más intenso, hace que nuestros cangrejos, seleccionados uno a uno, sean únicos. 3 unidades, salsa criolla y maduros cocinados.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/84fe258585ee67b56ebdcdab7f586fa5/d03e52b3c8af19d8fa8222e23efd9cfa.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CAZUELA-DE-PESCADO",
+  "name": "Cazuela de Pescado",
+  "category": "Cazuelas",
+  "categoryOrder": 7,
+  "price": 13.5,
+  "description": "Con chicharrón de pescado. Después del Chopsué, nuestra Cazuela es el plato preferido no solo de ecuatorianos,\nsino de todos quienes nos visitan. \nIncluye porción de arroz.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/ea64956921b1894486a0de08662913d2/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CAZUELA-MIXTA",
+  "name": "Cazuela Mixta",
+  "category": "Cazuelas",
+  "categoryOrder": 7,
+  "price": 13.5,
+  "description": "Después del Chopsué, nuestra Cazuela es\nel plato preferido no solo de ecuatorianos,\nsino de todos quienes visitan nuestro local. Con camarón y chicharrón de pescado.\nIncluye porción de arroz.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/295d69251cb179efbc1b8d8f5583a9bd/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CAZUELA-MARINERA",
+  "name": "Cazuela Marinera",
+  "category": "Cazuelas",
+  "categoryOrder": 7,
+  "price": 19.0,
+  "description": "De locos! Camarón, cangrejo y chicharrón de calamar y pescado. Incluye porción de arroz.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/3ab970782a4d58023da501159cb3bbdb/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CAMARONES-APANADOS",
+  "name": "Camarones Apanados",
+  "category": "Los clásicos",
+  "categoryOrder": 8,
+  "price": 14.0,
+  "description": "",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/87cc856d70c23da63fc8b4b3fe31a34c/d03e52b3c8af19d8fa8222e23efd9cfa.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CAMARONES-A-LA-PLANCHA",
+  "name": "Camarones a la Plancha",
+  "category": "Los clásicos",
+  "categoryOrder": 8,
+  "price": 14.0,
+  "description": "",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/a005dd903ee9284a42671040cf9e68d6/d03e52b3c8af19d8fa8222e23efd9cfa.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CORVINA-ENTERA",
+  "name": "Corvina Entera",
+  "category": "Los clásicos",
+  "categoryOrder": 8,
+  "price": 16.0,
+  "description": "Plato tradicional, corvina frita entera con acompañantes",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/f9071ae444e3770d06f4ecd181f6bc61/d03e52b3c8af19d8fa8222e23efd9cfa.jpeg",
+  "featured": false
+ },
+ {
+  "code": "MEDIA-LIBRA-DE-CAMARONES-AL-",
+  "name": "Media libra de Camarones al ajillo",
+  "category": "Los clásicos",
+  "categoryOrder": 8,
+  "price": 14.0,
+  "description": "Media libra de camarones al ajillo al estilo Pata Gorda",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/020599d21624e39c61b5c0ac4bc501de/d03e52b3c8af19d8fa8222e23efd9cfa.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PICUDO-FRITO",
+  "name": "Picudo Frito",
+  "category": "Los clásicos",
+  "categoryOrder": 8,
+  "price": 18.0,
+  "description": "Elige la preparación: frita, grill o al ajillo y 2 guarniciones.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/50aeb061362ad86ee936ffc8cbad4974/a1681d67ebe55c76c3af5f401619c278.jpeg",
+  "featured": true
+ },
+ {
+  "code": "ENSALADA-DE-CANGREJO",
+  "name": "Ensalada de Cangrejo",
+  "category": "Ensaladas",
+  "categoryOrder": 9,
+  "price": 16.0,
+  "description": "Ensalada con carne de cangrejo acompañado de ingredientes frescos.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/5b781be3bb2055c395d8b4f8c8ce66d5/c67fc65e9b4e16a553eb7574fba090f1.jpeg",
+  "featured": true
+ },
+ {
+  "code": "ARROZ-CON-CAMARON",
+  "name": "Arroz con Camarón",
+  "category": "Arroces",
+  "categoryOrder": 10,
+  "price": 11.0,
+  "description": "Todos con maduro frito, salsa criolla y salsa de aguacate.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/d5416567b94153d28048ed1fee4b90e2/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "ARROZ-EL-FAVORITO-DE-JOSUE",
+  "name": "Arroz \"El Favorito de Josué\"",
+  "category": "Arroces",
+  "categoryOrder": 10,
+  "price": 15.5,
+  "description": "Arroz con cangrejo y camarón. Todos con maduro frito, salsa criolla y salsa de aguacate.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/4c3aacb4fd8e0d317ee15f51810965be/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "MELOSO-DE-CONCHA",
+  "name": "Meloso de Concha",
+  "category": "Arroces",
+  "categoryOrder": 10,
+  "price": 18.0,
+  "description": "Arroz de concha Pata Gorda Style, con maduro frito, salsa criolla y salsa de aguacate.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/2ab31008ca8d9c39a95e00cb3624707e/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "ARROZ-CON-CANGREJO",
+  "name": "Arroz con Cangrejo",
+  "category": "Arroces",
+  "categoryOrder": 10,
+  "price": 18.0,
+  "description": "Arroz con carne de cangrejo acompañado de ingredientes frescos.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/f7006f170d8b864e748d0a9131ad652d/c67fc65e9b4e16a553eb7574fba090f1.jpeg",
+  "featured": true
+ },
+ {
+  "code": "ARROZ-MARINERO",
+  "name": "Arroz Marinero",
+  "category": "Arroces",
+  "categoryOrder": 10,
+  "price": 21.0,
+  "description": "Melosito con calamar, camarones y concha y cangrejo te va a encantar.\nCon maduro frito, salsa criolla y aguacate ahumado.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/adcfd1decfeb04df647059af8cba96fe/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": true
+ },
+ {
+  "code": "EMPACHADITO-DE-CANGREJO",
+  "name": "Empachadito de Cangrejo",
+  "category": "Empachaditos",
+  "categoryOrder": 11,
+  "price": 19.0,
+  "description": "Este plato es la evolución del tan querido Chopsué. Su base de arroz y cocolón salteado con ajillo, sus salsas, maduritos  y el aguacate son la combinación perfecta.\nIncluye 1 porción de chifles",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/bbe4849259f78ef4b8fd1803a7bc2435/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": true
+ },
+ {
+  "code": "EMPACHADITO-EL-FAVORITO-DE-J",
+  "name": "Empachadito \"El Favorito de Josué\"",
+  "category": "Empachaditos",
+  "categoryOrder": 11,
+  "price": 17.0,
+  "description": "Cangrejo y camarones al ajillo\nLa mezcla de la salsa de la casa y el ajillo crean una explosión de sabores única. \nSu base de arroz y cocolón.\nIncluye 1 porción de chifles",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/1b563b51eba778debf7635c59647f30a/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CHOPSUE-CRIOLLO",
+  "name": "Chopsué Criollo",
+  "category": "Chopsué",
+  "categoryOrder": 12,
+  "price": 17.0,
+  "description": "De Cangrejo. Nuestros Chopsués vienen con salsa criolla y maduritos fritos.\nElige tu base de arroz, cocolón o mixta.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/4106fc3d9e926ade816742dc1a5489b9/bc9c318a9c96996e2d990faf2b0c65f6.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CHOPSUE-EL-FAVORITO-DE-JOSUE",
+  "name": "Chopsué \"El Favorito de Josué\"",
+  "category": "Chopsué",
+  "categoryOrder": 12,
+  "price": 15.5,
+  "description": "De cangrejo y Camarones al Ajillo\nNuestros Chopsués vienen con salsa criolla y maduritos fritos.\nElige tu base de arroz, cocolón o mixta.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/aea5fd2cda9bfc3ef5e630a49154b198/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CHOPSUE-AL-AJILLO",
+  "name": "Chopsué Al Ajillo",
+  "category": "Chopsué",
+  "categoryOrder": 12,
+  "price": 17.5,
+  "description": "Arroz y / o cocolón, madurito frito, salsa criolla y salsa al ajillo.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/9298b57415ea44b04684ce7c6cb74d21/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CHOPSUE-MEDIA-LIBRA-DE-CAMAR",
+  "name": "Chopsué Media Libra de camarones",
+  "category": "Chopsué",
+  "categoryOrder": 12,
+  "price": 12.5,
+  "description": "media libra de camarones al ajillo, salsa criolla, salsa de la casa y maduritos fritos.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/04eff213bd68ae5287e6ced862ab013e/bc9c318a9c96996e2d990faf2b0c65f6.jpeg",
+  "featured": true
+ },
+ {
+  "code": "MEGA-CHOPSUE",
+  "name": "Mega Chopsué",
+  "category": "Chopsué",
+  "categoryOrder": 12,
+  "price": 17.0,
+  "description": "Con cangrejo y camarones al ajillo, salsa criolla, maduritos fritos, cocinados y nuestra salsa de la casa. Su base de arroz y cocolón  + porción de chifles",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/00767d897abdb5af163a2fd22dc7747c/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": true
+ },
+ {
+  "code": "CUCHARA-BRAVA",
+  "name": "Cuchara Brava",
+  "category": "Chopsué",
+  "categoryOrder": 12,
+  "price": 16.0,
+  "description": "El preferido de muchos: una deliciosa combinación con arroz, cama de pure y mix de mariscos (pulpo, calamar, camarón) con nuestro mágico ajillo",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/21f0bba07323c3d18c9b72a1ae481cae/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "CHOPSUE-GUAYACO",
+  "name": "Chopsué Guayaco",
+  "category": "Chopsué",
+  "categoryOrder": 12,
+  "price": 12.5,
+  "description": "Para los carnívoros: ¡Esta combinación te va a encantar!. Lomo fino, chorizo, pollo, menestra, mayonesa de albahaca, guacamole y chicharrón",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/1ae423ec37d4b3fbbebe412e1b94c74d/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "EL-MANABA",
+  "name": "El Manaba",
+  "category": "Chopsué",
+  "categoryOrder": 12,
+  "price": 14.0,
+  "description": "El infaltable para lo amantes del maní: camarones en salsa cremosa de maní, salprieta, acompañados de maduritos fritos y salsa criolla",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/0aaf421d391c3ed43d8bdcb32c9ad651/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PORCION-DE-CHIFLES",
+  "name": "Porción de Chifles",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 1.0,
+  "description": "Chips de plátano.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/9659644308c5d4fe6c770942f828b950/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PORCION-DE-SALSA-DE-LA-CASA",
+  "name": "Porción de Salsa de la Casa",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 3.05,
+  "description": "",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/a7ec5f23186c6c0520e3505bc4c07b9e/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PORCION-DE-SALSA-CRIOLLA",
+  "name": "Porción de Salsa Criolla",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 2.35,
+  "description": "",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/4e11368ccfded510b8e09ad5d877a90d/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PORCION-DE-SALSA-AJILLO",
+  "name": "Porción de Salsa Ajillo",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 3.05,
+  "description": "Porción de ajo.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/7c906c28841992353c88fcd041ee6512/d03e52b3c8af19d8fa8222e23efd9cfa.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PORCION-DE-COCOLON",
+  "name": "Porción de Cocolón",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 3.05,
+  "description": "Arroz tostado crujiente.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/3d3669277ece7dd92fa01f0f08d9bd79/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PORCION-DE-SALSA-DE-QUESO",
+  "name": "Porción de Salsa de Queso",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 2.55,
+  "description": "",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/ac46735732d302de72fc3dac3dd02260/a1681d67ebe55c76c3af5f401619c278.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PORCION-DE-ARROZ",
+  "name": "Porción de Arroz",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 2.55,
+  "description": "",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/4e5c058795f67f5d28f6dcf76dc3af35/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PAPAS-FRITAS",
+  "name": "Papas fritas",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 4.05,
+  "description": "Papas",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/6e8e015af8225144e89bcefabb4ead62/a1681d67ebe55c76c3af5f401619c278.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PORCION-DE-PATACONES-CON-QUE",
+  "name": "Porción de Patacones con Queso",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 5.55,
+  "description": "Plátano frito.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/dc71d0be340300c098bb66a31b2b08b1/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "GUACAMOLE",
+  "name": "Guacamole",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 6.75,
+  "description": "Cremoso puré de aguacate fresco preparado con cebolla picada, cilantro, un toque de limón y sal.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/183a7ad2c0d635666fcf02f045f2cf92/a1681d67ebe55c76c3af5f401619c278.jpeg",
+  "featured": false
+ },
+ {
+  "code": "PURE-DE-PAPA",
+  "name": "Pure de Papa",
+  "category": "Acompañantes",
+  "categoryOrder": 13,
+  "price": 4.85,
+  "description": "Cremoso puré de papa.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/983b77343add93f697cf387164e90e1b/a1681d67ebe55c76c3af5f401619c278.jpeg",
+  "featured": false
+ },
+ {
+  "code": "DEDITOS-DE-POLLO",
+  "name": "Deditos de Pollo",
+  "category": "Menú de Niños",
+  "categoryOrder": 14,
+  "price": 8.6,
+  "description": "Deditos de pollo con papas fritas o arroz.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/e9d8a7770003cdd75a321dcfae835dd2/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "SOPA-DE-QUESO",
+  "name": "Sopa de Queso",
+  "category": "Menú de Niños",
+  "categoryOrder": 14,
+  "price": 8.6,
+  "description": "Sopa de queso.",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/6a1575492c70cf666a2bc41151747c64/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "COLA",
+  "name": "Cola",
+  "category": "Bebidas",
+  "categoryOrder": 15,
+  "price": 2.5,
+  "description": "300 ml, incluye botella de vidrio",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/b1c4f6d6395d304cf264cbb7fdba40d5/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "COCA-COLA-ZERO",
+  "name": "Coca-Cola Zero",
+  "category": "Bebidas",
+  "categoryOrder": 15,
+  "price": 2.5,
+  "description": "300 ml, incluye botella de vidrio",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/047beb0ce5dfed945b2452abab42e8c8/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ },
+ {
+  "code": "TE-HELADO",
+  "name": "Té Helado",
+  "category": "Bebidas",
+  "categoryOrder": 15,
+  "price": 2.5,
+  "description": "",
+  "image": "https://tb-static.uber.com/prod/image-proc/processed_images/f40000ccb542690554004284cb6faae3/58f691da9eaef86b0b51f9b2c483fe63.jpeg",
+  "featured": false
+ }
+]
