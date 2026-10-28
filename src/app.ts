@@ -4,7 +4,7 @@ import http from "http";
 import mongoose from "mongoose";
 import routerApi from "./routes";
 import { env } from "./config/env";
-import { dbConnect, isConnected } from "./config/mongo";
+import { dbConnect, ensureAlive, isConnected, markDbOk } from "./config/mongo";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler.middleware";
 import { secureHeaders } from "./middlewares/security.middleware";
 import { requireInternalKey } from "./middlewares/auth.middleware";
@@ -46,7 +46,7 @@ export function createApp(options: CreateAppOptions = {}) {
       res.json({ ...out, colo: (req.headers["cf-ray"] ?? "").toString().split("-")[1] ?? "", hosts: mongoose.connection.host });
     } catch (err) { next(err); }
   });
-  app.get("/internal/warm", requireInternalKey, (_req, res, next) => { dbConnect().then(() => res.json({ ok: true, db: isConnected() }), next); });
+  app.get("/internal/warm", requireInternalKey, (_req, res, next) => { ensureAlive().then(() => res.json({ ok: true, db: isConnected() }), next); });
   routerApi(app);
   app.use(globalErrorHandler);
   const server = http.createServer(app);
