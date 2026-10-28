@@ -27,13 +27,14 @@ export async function runDailyCron() {
     const order = await InternalOrder.findOne({ branch: b._id, deliveryDate: today, status: { $in: ["enviado", "aprobado", "despachado", "recibido"] } });
     if (!order) { await raiseAlert({ type: "pedido_sin_enviar", severity: "warning", title: `${b.name} no envió pedido para hoy ${today}`, body: "Producción no recibió pedido de este local.", branch: b._id, branchName: b.name, audience: ["local", "produccion", "gerencia"], key: `pedido:${b._id}:${today}` }); alerts++; }
   }
-  const ingredients = await Ingredient.find({ active: true, minStock: { $gt: 0 } });
+  // Solo lo crítico para la operación (mariscos y preparados); el resto se ve en Inventario sin alertar.
+  const ingredients = await Ingredient.find({ active: true, minStock: { $gt: 0 }, group: { $in: ["mariscos", "preparados"] } });
   const ingById = new Map(ingredients.map((i) => [String(i._id), i]));
   const levels = await StockLevel.find({ ingredient: { $in: ingredients.map((i) => i._id) } }).populate("branch", "name type active");
   for (const l of levels) {
     const ing = ingById.get(String(l.ingredient));
     const b = l.branch as unknown as { _id: unknown; name: string; active: boolean } | null;
-    if (!ing || !b || !b.active || l.qty >= ing.minStock) continue;
+    if (!ing || !b || !b.active || l.qty >= ing.minStock || (b as { type?: string }).type !== "local") continue;
     await raiseAlert({ type: "stock_critico", severity: l.qty <= 0 ? "critical" : "warning", title: `${ing.name} bajo mínimo en ${b.name}`, body: `Hay ${l.qty} ${ing.unit}; el mínimo es ${ing.minStock}.`, branch: b._id as never, branchName: b.name, audience: ["local", "produccion", "bodega", "compras"], key: `stock:${String(b._id)}:${ing._id}:${today}` });
     alerts++;
   }
