@@ -19,16 +19,28 @@ interface Env {
 
 const PORT = 8787;
 
+/**
+ * El servidor Express se crea una sola vez por isolate. Si el Durable Object se reconstruye en el
+ * mismo isolate (p. ej. tras un error), volver a hacer `listen` daría EADDRINUSE y la API quedaría caída.
+ */
+let shared: ReturnType<typeof httpServerHandler> | null = null;
+function sharedHandler(): ReturnType<typeof httpServerHandler> {
+  if (!shared) {
+    const { server } = createApp({ lazyDb: true });
+    try { server.listen(PORT); } catch (err) { if (!String(err).includes("EADDRINUSE")) throw err; }
+    shared = httpServerHandler({ port: PORT });
+  }
+  return shared;
+}
+
 export class PataGordaApi extends DurableObject<Env> {
   private handler: ReturnType<typeof httpServerHandler>;
 
   constructor(ctx: ConstructorParameters<typeof DurableObject<Env>>[0], env: Env) {
     super(ctx, env);
     mongoose.set("bufferCommands", false);
-    ctx.blockConcurrencyWhile(() => resetDbForNewContext());
-    const { server } = createApp({ lazyDb: true });
-    server.listen(PORT);
-    this.handler = httpServerHandler({ port: PORT });
+    ctx.blockConcurrencyWhile(() => resetDbForNewContext().catch(() => undefined));
+    this.handler = sharedHandler();
   }
 
   override fetch(request: Request): Promise<Response> {
