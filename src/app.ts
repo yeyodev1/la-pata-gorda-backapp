@@ -32,7 +32,7 @@ export function createApp(options: CreateAppOptions = {}) {
   app.get("/", (_req, res) => { res.send("La Pata Gorda API viva"); });
   // Chequeo de vida sin tocar la base (sirve para ver si falta el acceso de red en Atlas).
   app.get("/api/health", (_req, res) => { res.json({ ok: true, db: isConnected(), assistant: Boolean(env.ANTHROPIC_API_KEY), media: Boolean(env.CLOUDINARY_CLOUD_NAME && env.CLOUDINARY_API_KEY && env.CLOUDINARY_API_SECRET), time: new Date().toISOString() }); });
-  if (options.lazyDb) app.use((_req, _res, next) => { dbConnect().then(() => next(), next); });
+  if (options.lazyDb) app.use((_req, res, next) => { ensureAlive().then(() => { res.on("finish", () => { if (res.statusCode < 500) markDbOk(); }); next(); }, next); });
   app.post("/internal/cron/daily", requireInternalKey, cronDaily);
   // Keep-warm (cron cada 4 min): conecta a Mongo y responde; mantiene viva la conexión del Durable Object.
   // Diagnóstico de latencia a Mongo desde el Worker (tiempos en ms).
