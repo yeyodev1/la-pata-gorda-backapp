@@ -8,8 +8,8 @@
   "compatibility_date": "2026-10-20",
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
-  // Cierre diario: 06:00 UTC = 01:00 Ecuador. Cada 4 min: mantiene caliente el Durable Object y la conexión a Atlas (evita arranques en frío de 20-40 s).
-  "triggers": { "crons": ["0 6 * * *", "*/4 * * * *"] },
+  // Cierre diario: 06:00 UTC = 01:00 Ecuador. Cada minuto: mantiene caliente el Durable Object y la conexión a Atlas (evita arranques en frío de 20-40 s).
+  "triggers": { "crons": ["0 6 * * *", "* * * * *"] },
   // La API vive en una sola instancia de Durable Object (conserva la conexión a Mongo entre peticiones).
   "durable_objects": { "bindings": [{ "name": "API", "class_name": "PataGordaApi" }] },
   "version_metadata": { "binding": "CF_VERSION_METADATA" },
