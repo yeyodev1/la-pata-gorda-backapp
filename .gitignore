@@ -1,0 +1,11 @@
+!.env.example
+.dev.vars
+.DS_Store
+.env
+.env.*
+.mongo-data
+.reunion
+.vercel
+.wrangler
+dist
+node_modules
