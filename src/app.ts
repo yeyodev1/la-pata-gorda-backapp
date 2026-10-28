@@ -33,6 +33,8 @@ export function createApp(options: CreateAppOptions = {}) {
   app.get("/api/health", (_req, res) => { res.json({ ok: true, db: isConnected(), assistant: Boolean(env.ANTHROPIC_API_KEY), media: Boolean(env.CLOUDINARY_CLOUD_NAME && env.CLOUDINARY_API_KEY && env.CLOUDINARY_API_SECRET), time: new Date().toISOString() }); });
   if (options.lazyDb) app.use((_req, _res, next) => { dbConnect().then(() => next(), next); });
   app.post("/internal/cron/daily", requireInternalKey, cronDaily);
+  // Keep-warm (cron cada 4 min): conecta a Mongo y responde; mantiene viva la conexión del Durable Object.
+  app.get("/internal/warm", requireInternalKey, (_req, res, next) => { dbConnect().then(() => res.json({ ok: true, db: isConnected() }), next); });
   routerApi(app);
   app.use(globalErrorHandler);
   const server = http.createServer(app);

@@ -55,8 +55,10 @@ function apiStub(env: Env) {
 
 export default {
   /** Cron Trigger: 06:00 UTC = 01:00 Ecuador. Cierre diario. */
-  scheduled(_event: unknown, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
-    ctx.waitUntil(apiStub(env).fetch(new Request("https://la-pata-gorda-api.internal/internal/cron/daily", { method: "POST", headers: { "x-internal-key": env.CRON_KEY ?? "" } })));
+  scheduled(event: { cron?: string }, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
+    const daily = event.cron === "0 6 * * *";
+    const url = daily ? "https://la-pata-gorda-api.internal/internal/cron/daily" : "https://la-pata-gorda-api.internal/internal/warm";
+    ctx.waitUntil(apiStub(env).fetch(new Request(url, { method: daily ? "POST" : "GET", headers: { "x-internal-key": env.CRON_KEY ?? "" } })));
   },
   fetch(request: Request, env: Env): Promise<Response> {
     return apiStub(env).fetch(request);
