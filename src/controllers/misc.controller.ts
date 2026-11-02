@@ -35,7 +35,7 @@ export const dashboard = h(async (req, res) => {
   const bIds = branches.map((b) => b._id);
   const timings: Record<string, number> = {}; const t0 = Date.now();
   const timed = async <T>(k: string, p: Promise<T>): Promise<T> => { const s = Date.now(); const r = await p; timings[k] = Date.now() - s; return r; };
-  const shopToday = await timed("shopToday", CustomerOrder.find({ branch: { $in: bIds }, createdAt: { $gte: new Date(`${today}T00:00:00-05:00`) } }).lean());
+  const shopToday = await timed("shopToday", CustomerOrder.find({ branch: { $in: bIds }, status: { $ne: "por_pagar" }, createdAt: { $gte: new Date(`${today}T00:00:00-05:00`) } }).lean());
   const [sales, orders, reservations, alerts, conversations, reviews, plan, purchases] = await Promise.all([
     timed("sales", DailySales.find({ branch: { $in: bIds }, date: { $gte: weekAgo, $lte: today } }, { branch: 1, date: 1, totalAmount: 1 }).lean()),
     timed("orders", InternalOrder.find({ branch: { $in: bIds }, deliveryDate: { $in: [today, tomorrow] }, status: { $ne: "anulado" } }, { branch: 1, deliveryDate: 1, status: 1, inflatedCount: 1 }).lean()),
