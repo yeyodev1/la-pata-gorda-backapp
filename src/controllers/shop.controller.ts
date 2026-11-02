@@ -12,10 +12,10 @@ import { pageQuery, paged } from "../utils/pagination";
 import { ecuadorDateString } from "../utils/dates";
 import { payphoneConfigured } from "../services/payphone.service";
 import { env } from "../config/env";
-import { createCustomerOrder, confirmPayphone, setOrderStatus } from "../services/shop.service";
+import { changeToOfflinePayment, createCustomerOrder, confirmPayphone, setOrderStatus, startBoxPayment } from "../services/shop.service";
 import { assertBranchAccess } from "./catalog.controller";
 
-const publicBranch = (b: InstanceType<typeof Branch>) => ({ id: b._id, code: b.code, name: b.name, city: b.city, address: b.address, phone: b.phone, hours: b.hours, pickupEnabled: b.pickupEnabled, deliveryEnabled: b.deliveryEnabled, deliveryFee: b.deliveryFee, minOrder: b.minOrder, prepMinutes: b.prepMinutes, whatsapp: b.whatsapp, mapsUrl: b.mapsUrl, lat: b.lat, lng: b.lng, deliveryRadiusKm: b.deliveryRadiusKm, capacity: b.capacity, privateTables: b.privateTables });
+const publicBranch = (b: InstanceType<typeof Branch>) => ({ id: b._id, code: b.code, name: b.name, city: b.city, address: b.address, phone: b.phone, hours: b.hours, pickupEnabled: b.pickupEnabled, deliveryEnabled: b.deliveryEnabled, deliveryFee: b.deliveryFee, minOrder: b.minOrder, prepMinutes: b.prepMinutes, whatsapp: b.whatsapp, mapsUrl: b.mapsUrl, lat: b.lat, lng: b.lng, deliveryRadiusKm: b.deliveryRadiusKm, capacity: b.capacity, privateTables: b.privateTables, cardEnabled: payphoneConfigured() && b.payphoneEnabled !== false });
 
 // ---------- Público (tienda) ----------
 export const storefront = h(async (_req, res) => {
@@ -44,13 +44,24 @@ export const track = h(async (req, res) => {
   const order = await CustomerOrder.findOne({ trackingCode: String(req.params.code).toUpperCase() });
   if (!order) throw notFound("Pedido no encontrado");
   const o = order.toObject();
-  res.json({ order: { number: o.number, trackingCode: o.trackingCode, branchName: o.branchName, type: o.type, customer: { name: o.customer.name }, address: o.address, items: o.items, subtotal: o.subtotal, deliveryFee: o.deliveryFee, total: o.total, payment: { method: o.payment.method, status: o.payment.status }, status: o.status, estimatedMinutes: o.estimatedMinutes, scheduledFor: o.scheduledFor, timeline: o.timeline, createdAt: o.createdAt, cancelReason: o.cancelReason } });
+  res.json({ order: { number: o.number, trackingCode: o.trackingCode, branchName: o.branchName, type: o.type, customer: { name: o.customer.name }, address: o.address, items: o.items, subtotal: o.subtotal, deliveryFee: o.deliveryFee, total: o.total, payment: { method: o.payment.method, status: o.payment.status, card: o.payment.card }, status: o.status, branch: o.branch, estimatedMinutes: o.estimatedMinutes, scheduledFor: o.scheduledFor, timeline: o.timeline, createdAt: o.createdAt, cancelReason: o.cancelReason } });
 });
 
 export const payphoneReturn = h(async (req, res) => {
-  const { order: code, id, clientTransactionId } = req.body as { order?: string; id?: string; clientTransactionId?: string };
-  if (!code || !id || !clientTransactionId) throw badRequest("Faltan datos del pago");
-  const order = await confirmPayphone(String(code).toUpperCase(), String(id), String(clientTransactionId));
+  const { order: code, id, clientTransactionId } = req.body as { order?: string; id?: string | number; clientTransactionId?: string };
+  if (!id || !clientTransactionId) throw badRequest("Faltan datos del pago");
+  const order = await confirmPayphone(String(id), String(clientTransactionId), code ? String(code) : undefined);
+  res.json({ status: order.status, payment: order.payment.status, trackingCode: order.trackingCode, total: order.total, card: order.payment.card });
+});
+
+/** La vista de pago pide aquí los datos de la Cajita. Cada llamada es un intento nuevo. */
+export const payOrder = h(async (req, res) => {
+  const { order, box } = await startBoxPayment(String(req.params.code).toUpperCase());
+  res.json({ number: order.number, trackingCode: order.trackingCode, total: order.total, type: order.type, payment: order.payment.status, box });
+});
+
+export const changePayment = h(async (req, res) => {
+  const order = await changeToOfflinePayment(String(req.params.code).toUpperCase(), String(req.body.payment ?? ""));
   res.json({ status: order.status, payment: order.payment.status, trackingCode: order.trackingCode });
 });
 
@@ -95,7 +106,7 @@ export const listCustomerOrders = h(async (req, res) => {
   const filter: Record<string, unknown> = {};
   const branchId = req.query.branch ? String(req.query.branch) : req.auth!.role === "local" ? req.auth!.branch : null;
   if (branchId) { assertBranchAccess(req.auth, branchId); filter.branch = new Types.ObjectId(branchId); }
-  if (req.query.status) filter.status = { $in: String(req.query.status).split(",") };
+  filter.status = req.query.status ? { $in: String(req.query.status).split(",") } : { $ne: "por_pagar" };
   if (req.query.from || req.query.to) filter.createdAt = { ...(req.query.from ? { $gte: new Date(`${req.query.from}T00:00:00-05:00`) } : {}), ...(req.query.to ? { $lte: new Date(`${req.query.to}T23:59:59-05:00`) } : {}) };
   if (req.query.q) filter.$or = [{ number: { $regex: String(req.query.q), $options: "i" } }, { "customer.name": { $regex: String(req.query.q), $options: "i" } }, { "customer.phone": { $regex: String(req.query.q), $options: "i" } }];
   const [items, total] = await Promise.all([CustomerOrder.find(filter).sort({ createdAt: -1 }).skip(q.skip).limit(q.limit), CustomerOrder.countDocuments(filter)]);
