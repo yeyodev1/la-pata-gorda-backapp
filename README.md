@@ -8,6 +8,11 @@ Backend del sistema de La Pata Gorda (cadena de restaurantes de cangrejo y maris
 - **Operación interna** (`/api/*`): locales, menú y recetas, inventario por local, cierre de ventas, pedidos de los locales al centro de producción con sugerencia automática (promedio por día de semana + seguridad), plan de producción, compras, reservas, WhatsApp, reseñas, alertas, reportes y asistente con Claude.
 - **Integraciones** (`/integrations/*`, clave en `x-internal-key`): para el agente de WhatsApp, Google reviews y el POS.
 
+## Pago con tarjeta (Payphone)
+Un pedido con tarjeta queda `por_pagar`: no suena en la pantalla de pedidos ni suma en las cifras hasta que Payphone lo aprueba, por ese id de transacción y por el monto exacto. Si no se aprueba, el cliente puede reintentar o cambiar a pago al recibir; si no hace nada, el cierre diario lo cancela.
+
+Se activa con los secretos `PAYPHONE_TOKEN` y `PAYPHONE_STORE_ID`. Por local se puede usar otra sucursal de Payphone (`payphoneStoreId`) o apagar la tarjeta (`payphoneEnabled: false`). Para probar sin claves: `src/scripts/payphone-sim.ts`.
+
 ## Correr en local
 ```bash
 npm install
