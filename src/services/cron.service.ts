@@ -7,6 +7,7 @@ import { StockLevel } from "../models/stock.model";
 import { Ingredient } from "../models/ingredient.model";
 import { raiseAlert } from "../models/alert.model";
 import { ecuadorDateString, addDaysStr } from "../utils/dates";
+import { expireUnpaidOrders } from "./shop.service";
 
 /**
  * Cierre diario (01:00 Ecuador): revisa lo que quedó pendiente y levanta alertas.
@@ -17,6 +18,7 @@ import { ecuadorDateString, addDaysStr } from "../utils/dates";
  * - Conversaciones de WhatsApp abiertas sin respuesta hace más de 2 horas.
  */
 export async function runDailyCron() {
+  await expireUnpaidOrders();
   const today = ecuadorDateString();
   const yesterday = addDaysStr(today, -1);
   const branches = await Branch.find({ type: "local", active: true });

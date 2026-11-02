@@ -35,6 +35,10 @@ export interface IBranch {
   deliveryRadiusKm: number;
   /** Mesas privadas / salones que se reservan con confirmación del administrador. */
   privateTables: { name: string; capacity: number }[];
+  /** Cobra con tarjeta por Payphone. */
+  payphoneEnabled: boolean;
+  /** Sucursal de Payphone que cobra los pedidos de este local (vacío = PAYPHONE_STORE_ID). */
+  payphoneStoreId: string;
   active: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -63,6 +67,8 @@ const branchSchema = new Schema<IBranch>(
     lng: { type: Number, default: null },
     deliveryRadiusKm: { type: Number, default: 12 },
     privateTables: { type: [{ name: { type: String, required: true }, capacity: { type: Number, default: 10 } }], default: [] },
+    payphoneEnabled: { type: Boolean, default: true },
+    payphoneStoreId: { type: String, default: "" },
     active: { type: Boolean, default: true },
   },
   { timestamps: true },

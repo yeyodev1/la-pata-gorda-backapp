@@ -1,6 +1,7 @@
 import mongoose, { Schema, Types } from "mongoose";
 
-export const CUSTOMER_ORDER_STATUSES = ["nuevo", "aceptado", "en_preparacion", "listo", "en_camino", "entregado", "cancelado"] as const;
+/** "por_pagar": pago con tarjeta aún sin aprobar. No llega a la pantalla de pedidos ni suma en las cifras. */
+export const CUSTOMER_ORDER_STATUSES = ["por_pagar", "nuevo", "aceptado", "en_preparacion", "listo", "en_camino", "entregado", "cancelado"] as const;
 export type CustomerOrderStatus = (typeof CUSTOMER_ORDER_STATUSES)[number];
 export const FULFILLMENT_TYPES = ["retiro", "domicilio"] as const;
 export const PAYMENT_METHODS = ["payphone", "local", "efectivo", "transferencia"] as const;
@@ -31,7 +32,7 @@ export interface ICustomerOrder {
   subtotal: number;
   deliveryFee: number;
   total: number;
-  payment: { method: PaymentMethod; status: "pendiente" | "pagado" | "fallido"; reference: string; payphoneId: string; paidAt: Date | null };
+  payment: { method: PaymentMethod; status: "pendiente" | "pagado" | "fallido"; reference: string; payphoneId: string; paidAt: Date | null; flow: "box" | "button" | ""; attempts: number; clientTxId: string; authorizationCode: string; card: string };
   status: CustomerOrderStatus;
   notes: string;
   /** Hora pedida por el cliente (vacío = lo antes posible). */
@@ -61,7 +62,7 @@ const orderSchema = new Schema<ICustomerOrder>(
     subtotal: { type: Number, default: 0 },
     deliveryFee: { type: Number, default: 0 },
     total: { type: Number, default: 0 },
-    payment: { method: { type: String, enum: PAYMENT_METHODS, default: "local" }, status: { type: String, enum: ["pendiente", "pagado", "fallido"], default: "pendiente" }, reference: { type: String, default: "" }, payphoneId: { type: String, default: "" }, paidAt: { type: Date, default: null } },
+    payment: { method: { type: String, enum: PAYMENT_METHODS, default: "local" }, status: { type: String, enum: ["pendiente", "pagado", "fallido"], default: "pendiente" }, reference: { type: String, default: "" }, payphoneId: { type: String, default: "" }, paidAt: { type: Date, default: null }, flow: { type: String, default: "" }, attempts: { type: Number, default: 0 }, clientTxId: { type: String, default: "" }, authorizationCode: { type: String, default: "" }, card: { type: String, default: "" } },
     status: { type: String, enum: CUSTOMER_ORDER_STATUSES, default: "nuevo", index: true },
     notes: { type: String, default: "" },
     scheduledFor: { type: String, default: "" },
