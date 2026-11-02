@@ -6,7 +6,7 @@ import { nextNumber } from "../models/counter.model";
 import { badRequest, conflict, notFound } from "../errors/httpError";
 import { round2 } from "../utils/numbers";
 import { env } from "../config/env";
-import { payphoneConfigured, preparePayment, confirmPayment } from "./payphone.service";
+import { amounts, confirmPayment, PayphoneFlow, payphoneConfigured, preparePayment, toE164 } from "./payphone.service";
 import { audit } from "./audit.service";
 import { AuthPayload } from "../middlewares/auth.middleware";
 
@@ -20,6 +20,8 @@ export interface CheckoutInput {
   notes?: string;
   scheduledFor?: string;
   channel?: "web" | "whatsapp" | "agente" | "telefono";
+  /** "box": la tienda muestra la Cajita de Pagos. Sin indicar: link de pago por redirección. */
+  paymentFlow?: PayphoneFlow;
 }
 
 function code(): string {
@@ -48,7 +50,9 @@ export async function createCustomerOrder(input: CheckoutInput): Promise<{ order
   if (!Array.isArray(input.items) || !input.items.length) throw badRequest("El carrito está vacío");
   const method = String(input.payment) as (typeof PAYMENT_METHODS)[number];
   if (!PAYMENT_METHODS.includes(method)) throw badRequest("Forma de pago inválida");
-  if (method === "payphone" && !payphoneConfigured()) throw badRequest("El pago con tarjeta aún no está disponible");
+  const flow: PayphoneFlow = input.paymentFlow === "box" ? "box" : "button";
+  if (method === "payphone" && (!payphoneConfigured() || !branch.payphoneEnabled)) throw badRequest("El pago con tarjeta aún no está disponible");
+  if (method === "payphone" && flow === "box" && !String(input.customer.email ?? "").trim()) throw badRequest("Para pagar con tarjeta necesitamos tu correo");
   if (method === "local" && input.type !== "retiro") throw badRequest("Pagar en el local solo aplica a retiro");
   if (method === "efectivo" && input.type !== "domicilio") throw badRequest("Pago en efectivo al recibir solo aplica a domicilio");
   const products = await Product.find({ _id: { $in: input.items.map((i) => new Types.ObjectId(i.product)) }, active: true, online: true });
@@ -80,33 +84,99 @@ export async function createCustomerOrder(input: CheckoutInput): Promise<{ order
   const order = await CustomerOrder.create({
     number: await nextNumber("TIENDA"), trackingCode: code(), branch: branch._id, branchName: branch.name, type: input.type, channel: input.channel ?? "web",
     customer: { name, phone, email: String(input.customer.email ?? "").trim() }, address: { text: String(input.address?.text ?? "").trim(), reference: String(input.address?.reference ?? "").trim(), lat: input.address?.lat ?? null, lng: input.address?.lng ?? null },
-    items, subtotal, deliveryFee, total, payment: { method, status: "pendiente", reference: "", payphoneId: "", paidAt: null }, status: "nuevo", notes: String(input.notes ?? "").slice(0, 500), scheduledFor: String(input.scheduledFor ?? ""), estimatedMinutes: branch.prepMinutes + (input.type === "domicilio" ? 20 + Math.round((distanceKm ?? 4) * 3) : 0),
-    timeline: [{ status: "nuevo", at: new Date(), by: "cliente", note: "" }],
+    items, subtotal, deliveryFee, total, payment: { method, status: "pendiente", reference: "", payphoneId: "", paidAt: null, flow: method === "payphone" ? flow : "", attempts: 0, clientTxId: "", authorizationCode: "", card: "" }, status: method === "payphone" ? "por_pagar" : "nuevo", notes: String(input.notes ?? "").slice(0, 500), scheduledFor: String(input.scheduledFor ?? ""), estimatedMinutes: branch.prepMinutes + (input.type === "domicilio" ? 20 + Math.round((distanceKm ?? 4) * 3) : 0),
+    timeline: [{ status: method === "payphone" ? "por_pagar" : "nuevo", at: new Date(), by: "cliente", note: "" }],
   });
   let paymentUrl: string | null = null;
-  if (method === "payphone") {
-    const r = await preparePayment({ amountUsd: total, clientTransactionId: order.number, reference: `La Pata Gorda ${order.number}`, responseUrl: `${env.SHOP_URL}/tienda/pago?order=${order.trackingCode}`, email: order.customer.email || undefined, phone: order.customer.phone });
+  if (method === "payphone" && flow === "button") {
+    const clientTransactionId = nextClientTx(order);
+    const r = await preparePayment({ amountUsd: total, clientTransactionId, reference: `La Pata Gorda ${order.number}`, responseUrl: `${env.SHOP_URL}/tienda/pago?order=${order.trackingCode}`, storeId: branch.payphoneStoreId || env.PAYPHONE_STORE_ID, email: order.customer.email || undefined, phone: order.customer.phone });
     order.payment.payphoneId = r.paymentId; await order.save();
     paymentUrl = r.url;
   }
   return { order, paymentUrl };
 }
 
-/** Retorno de Payphone: confirma la transacción y marca el pedido como pagado. */
-export async function confirmPayphone(trackingCode: string, id: string, clientTxId: string) {
+/** Payphone exige un id único por intento: código de seguimiento + número de intento. */
+function nextClientTx(order: InstanceType<typeof CustomerOrder>): string {
+  order.payment.attempts = (order.payment.attempts ?? 0) + 1;
+  order.payment.clientTxId = `${order.trackingCode}-${order.payment.attempts}`;
+  return order.payment.clientTxId;
+}
+
+/** Datos de la Cajita de Pagos para un pedido por pagar. Cada llamada es un intento nuevo. */
+export async function startBoxPayment(trackingCode: string) {
   const order = await CustomerOrder.findOne({ trackingCode });
   if (!order) throw notFound("Pedido no encontrado");
+  if (order.payment.method !== "payphone") throw badRequest("Este pedido no se paga con tarjeta");
+  if (order.payment.status === "pagado") return { order, box: null };
+  if (order.status !== "por_pagar") throw conflict("Este pedido ya no se puede pagar");
+  if (!payphoneConfigured()) throw badRequest("El pago con tarjeta aún no está disponible");
+  const branch = await Branch.findById(order.branch);
+  const clientTransactionId = nextClientTx(order);
+  order.payment.flow = "box";
+  order.payment.status = "pendiente";
+  await order.save();
+  const { service: _service, tip: _tip, ...money } = amounts(order.total);
+  return { order, box: { token: env.PAYPHONE_TOKEN, storeId: branch?.payphoneStoreId || env.PAYPHONE_STORE_ID, clientTransactionId, ...money, reference: `La Pata Gorda ${order.number}`, email: order.customer.email, phoneNumber: toE164(order.customer.phone) } };
+}
+
+/**
+ * Regreso de Payphone. El pedido sale del id de transacción, y solo cuenta como pagado si Payphone
+ * lo aprueba, por ese mismo id y por el monto exacto del pedido. Si no se aprueba sigue "por_pagar"
+ * para que el cliente pueda reintentar o cambiar de forma de pago.
+ */
+export async function confirmPayphone(id: string, clientTxId: string, trackingCode?: string) {
+  const code = (trackingCode || clientTxId.split("-")[0] || "").toUpperCase();
+  const order = await CustomerOrder.findOne({ trackingCode: code });
+  if (!order) throw notFound("Pedido no encontrado");
+  if (order.payment.method !== "payphone") throw badRequest("Este pedido no se paga con tarjeta");
   if (order.payment.status === "pagado") return order;
-  const r = await confirmPayment(id, clientTxId);
-  order.payment.status = r.ok ? "pagado" : "fallido";
+  if (!clientTxId.startsWith(`${order.trackingCode}-`)) throw badRequest("La transacción no corresponde a este pedido");
+  const r = await confirmPayment(order.payment.flow === "box" ? "box" : "button", Number(id), clientTxId);
+  const expected = Math.round(order.total * 100);
+  const genuine = r.ok && r.clientTransactionId === clientTxId && r.amount === expected;
+  if (r.ok && !genuine) console.error(`[payphone] pago aprobado que no cuadra con ${order.number}: tx ${r.clientTransactionId}, monto ${r.amount}, esperado ${expected}`);
   order.payment.reference = r.transactionId;
-  order.payment.paidAt = r.ok ? new Date() : null;
-  if (!r.ok && order.status === "nuevo") { order.status = "cancelado"; order.cancelReason = "Pago con tarjeta no aprobado"; order.timeline.push({ status: "cancelado", at: new Date(), by: "payphone", note: `statusCode ${r.statusCode}` }); }
+  if (genuine) {
+    order.payment.status = "pagado";
+    order.payment.paidAt = new Date();
+    order.payment.authorizationCode = r.authorizationCode;
+    order.payment.card = [r.cardBrand, r.lastDigits].filter(Boolean).join(" ");
+    order.timeline.push({ status: "pagado", at: new Date(), by: "payphone", note: "" });
+    // Ya cobrado: entra a la pantalla de pedidos aunque el pedido hubiera caducado mientras pagaba.
+    if (order.status === "por_pagar" || order.status === "cancelado") { order.status = "nuevo"; order.cancelReason = ""; order.timeline.push({ status: "nuevo", at: new Date(), by: "payphone", note: "" }); }
+  } else {
+    order.payment.status = "fallido";
+    order.timeline.push({ status: "pago_rechazado", at: new Date(), by: "payphone", note: r.message || `statusCode ${r.statusCode}` });
+  }
   await order.save();
   return order;
 }
 
-const NEXT: Record<CustomerOrderStatus, CustomerOrderStatus[]> = { nuevo: ["aceptado", "cancelado"], aceptado: ["en_preparacion", "listo", "cancelado"], en_preparacion: ["listo", "cancelado"], listo: ["en_camino", "entregado", "cancelado"], en_camino: ["entregado", "cancelado"], entregado: [], cancelado: [] };
+/** Tarjeta rechazada o sin tarjeta a mano: el pedido pasa a pagarse al recibir o en el local. */
+export async function changeToOfflinePayment(trackingCode: string, payment: string) {
+  const order = await CustomerOrder.findOne({ trackingCode });
+  if (!order) throw notFound("Pedido no encontrado");
+  if (order.status !== "por_pagar" || order.payment.status === "pagado") throw conflict("Este pedido ya no puede cambiar de forma de pago");
+  const allowed = order.type === "retiro" ? "local" : "efectivo";
+  if (payment !== allowed) throw badRequest(order.type === "retiro" ? "En retiro se paga en el local" : "A domicilio se paga en efectivo al recibir");
+  order.payment.method = allowed;
+  order.payment.status = "pendiente";
+  order.status = "nuevo";
+  order.timeline.push({ status: "nuevo", at: new Date(), by: "cliente", note: "Cambió a pago al recibir" });
+  await order.save();
+  return order;
+}
+
+/** Pedidos con tarjeta que nunca se pagaron: se cancelan al pasar una hora (el formulario dura 10 min). */
+export async function expireUnpaidOrders(): Promise<number> {
+  const stale = await CustomerOrder.find({ status: "por_pagar", createdAt: { $lt: new Date(Date.now() - 3600000) } });
+  for (const o of stale) { o.status = "cancelado"; o.cancelReason = "Pago con tarjeta sin completar"; o.timeline.push({ status: "cancelado", at: new Date(), by: "sistema", note: o.cancelReason }); await o.save(); }
+  return stale.length;
+}
+
+const NEXT: Record<CustomerOrderStatus, CustomerOrderStatus[]> = { por_pagar: ["nuevo", "cancelado"], nuevo: ["aceptado", "cancelado"], aceptado: ["en_preparacion", "listo", "cancelado"], en_preparacion: ["listo", "cancelado"], listo: ["en_camino", "entregado", "cancelado"], en_camino: ["entregado", "cancelado"], entregado: [], cancelado: [] };
 
 /** El local avanza el pedido en la pantalla de pedidos. */
 export async function setOrderStatus(auth: AuthPayload, id: string, status: CustomerOrderStatus, note = "", extra: { estimatedMinutes?: number; enteredInPos?: boolean; paid?: boolean } = {}) {
