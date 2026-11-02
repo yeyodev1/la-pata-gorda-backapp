@@ -39,7 +39,9 @@ export default function routerApi(app: Application) {
   pub.get("/storefront", shop.storefront);
   pub.post("/checkout", rateLimit(30, 10 * 60 * 1000), shop.checkout);
   pub.get("/orders/:code", shop.track);
-  pub.post("/payphone/confirm", shop.payphoneReturn);
+  pub.post("/orders/:code/pay", rateLimit(30, 10 * 60 * 1000), shop.payOrder);
+  pub.post("/orders/:code/payment-method", rateLimit(30, 10 * 60 * 1000), shop.changePayment);
+  pub.post("/payphone/confirm", rateLimit(60, 10 * 60 * 1000), shop.payphoneReturn);
   pub.post("/reservations", rateLimit(20, 10 * 60 * 1000), shop.publicReservation);
 
   // Pantalla de pedidos de la tienda (locales y atención)
