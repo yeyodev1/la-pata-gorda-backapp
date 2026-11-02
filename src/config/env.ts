@@ -20,6 +20,11 @@ export const env = {
   /** Payphone (pasarela de pago, Ecuador). Vacío = la tienda solo ofrece pago en local / al recibir. */
   PAYPHONE_TOKEN: process.env.PAYPHONE_TOKEN ?? "",
   PAYPHONE_STORE_ID: process.env.PAYPHONE_STORE_ID ?? "",
+  /** IVA incluido en los precios del menú: Payphone recibe base e impuesto por separado. */
+  PAYPHONE_IVA_RATE: Number(process.env.PAYPHONE_IVA_RATE ?? 0.15),
+  /** Solo se cambian para probar con el simulador local (src/scripts/payphone-sim.ts). */
+  PAYPHONE_BOX_CONFIRM_URL: process.env.PAYPHONE_BOX_CONFIRM_URL ?? "https://paymentbox.payphonetodoesposible.com/api/confirm",
+  PAYPHONE_BUTTON_URL: process.env.PAYPHONE_BUTTON_URL ?? "https://pay.payphonetodoesposible.com/api/button",
   /** URL pública de la tienda (para el retorno de Payphone y los links de seguimiento). */
   SHOP_URL: process.env.SHOP_URL ?? process.env.PUBLIC_APP_URL ?? "http://localhost:5190",
   /** Google Maps: mapa del checkout (la tienda recibe la clave desde /public/storefront). */
